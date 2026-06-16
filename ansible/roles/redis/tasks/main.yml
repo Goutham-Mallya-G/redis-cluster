@@ -1,0 +1,83 @@
+---
+- name: Install build dependencies
+  apt:
+    name:
+      - build-essential
+      - wget
+      - tar
+      - pkg-config
+      - procps
+    state: present
+    update_cache: yes
+
+- name: Create Redis group
+  group:
+    name: redis
+    state: present
+
+- name: Create Redis user
+  user:
+    name: redis
+    group: redis
+    system: yes
+    shell: /bin/false
+
+- name: Create Redis directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: redis
+    group: redis
+    mode: '0755'
+  loop:
+    - "{{ redis_install_dir }}"
+    - "{{ redis_data_dir }}"
+    - "{{ redis_conf_dir }}"
+
+- name: Download Redis source code
+  get_url:
+    url: "http://download.redis.io/releases/redis-{{ redis_version }}.tar.gz"
+    dest: "/tmp/redis-{{ redis_version }}.tar.gz"
+
+- name: Extract Redis source code
+  unarchive:
+    src: "/tmp/redis-{{ redis_version }}.tar.gz"
+    dest: "/tmp/"
+    remote_src: yes
+
+- name: Compile and Install Redis
+  shell: |
+    make install PREFIX={{ redis_install_dir }}
+  args:
+    chdir: "/tmp/redis-{{ redis_version }}"
+    creates: "{{ redis_install_dir }}/bin/redis-server"
+
+- name: Set global path for Redis binaries
+  file:
+    src: "{{ redis_install_dir }}/bin/{{ item }}"
+    dest: "/usr/local/bin/{{ item }}"
+    state: link
+  loop:
+    - redis-server
+    - redis-cli
+
+- name: Generate Redis config
+  template:
+    src: redis.conf.j2
+    dest: "{{ redis_conf_dir }}/redis.conf"
+    owner: redis
+    group: redis
+    mode: '0644'
+  notify: restart redis
+
+- name: Start Redis service
+  shell: |
+    if ! pgrep redis-server > /dev/null; then
+      sudo -u redis /usr/local/bin/redis-server {{ redis_conf_dir }}/redis.conf
+    fi
+
+- name: Wait for Redis to start
+  wait_for:
+    port: "{{ redis_port }}"
+    host: 127.0.0.1
+    timeout: 15

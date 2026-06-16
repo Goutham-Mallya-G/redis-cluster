@@ -1,0 +1,5 @@
+---
+- name: restart redis
+  shell: |
+    /usr/local/bin/redis-cli shutdown || true
+    sudo -u redis /usr/local/bin/redis-server /etc/redis/redis.conf

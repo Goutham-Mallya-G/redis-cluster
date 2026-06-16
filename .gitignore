@@ -1,0 +1,19 @@
+# Python cache and environments
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+
+# Ansible
+*.retry
+
+# Local runtime logs and command outputs
+logs/
+output/
+
+# IDE and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

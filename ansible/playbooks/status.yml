@@ -1,0 +1,51 @@
+---
+- name: Get Cluster Status
+  hosts: redis_nodes
+  become: yes
+  gather_facts: no
+  tasks:
+    - name: Get Redis version
+      shell: redis-server -v | awk '{print $3}' | cut -d '=' -f 2
+      register: redis_version
+    
+    - name: Get Cluster nodes info
+      shell: redis-cli -p 6379 cluster nodes
+      register: cluster_nodes
+      run_once: true
+      delegate_to: 10.99.0.11
+
+    - name: Get Memory info
+      shell: redis-cli -p 6379 info memory | grep used_memory_human | cut -d ':' -f 2 | tr -d '\r'
+      register: memory_info
+
+    - name: Get Keys info
+      shell: redis-cli -p 6379 info keyspace | grep db0 | cut -d ',' -f 1 | cut -d '=' -f 2
+      register: keys_info
+      ignore_errors: true
+
+    - name: Get Cluster state
+      shell: redis-cli -p 6379 cluster info | grep cluster_state | cut -d ':' -f 2 | tr -d '\r'
+      register: cluster_state
+      run_once: true
+      delegate_to: 10.99.0.11
+
+    - name: Compile status output
+      set_fact:
+        node_status:
+          ip: "{{ inventory_hostname }}"
+          version: "{{ redis_version.stdout }}"
+          memory: "{{ memory_info.stdout }}"
+          keys: "{{ keys_info.stdout | default('0', true) }}"
+
+- name: Print Status Summary
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Display cluster state
+      debug:
+        msg: 
+          - "Cluster State: {{ hostvars['redis-node-1'].cluster_state.stdout }}"
+          - "Node Details:"
+          - "{% for host in groups['redis_nodes'] %}{{ hostvars[host].node_status }}{% endfor %}"
+          - "Raw Cluster Nodes:"
+          - "{{ hostvars['redis-node-1'].cluster_nodes.stdout_lines }}"

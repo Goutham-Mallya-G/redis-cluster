@@ -1,0 +1,28 @@
+---
+- name: Upgrade Single Redis Node
+  hosts: "{{ target_node }}"
+  become: yes
+  tasks:
+    - name: Stop Redis service
+      shell: /usr/local/bin/redis-cli shutdown
+      ignore_errors: yes
+
+    - name: Download new Redis source code
+      get_url:
+        url: "http://download.redis.io/releases/redis-{{ target_version }}.tar.gz"
+        dest: "/tmp/redis-{{ target_version }}.tar.gz"
+
+    - name: Extract new Redis source code
+      unarchive:
+        src: "/tmp/redis-{{ target_version }}.tar.gz"
+        dest: "/tmp/"
+        remote_src: yes
+
+    - name: Compile and Install new Redis
+      shell: |
+        make install PREFIX=/opt/redis
+      args:
+        chdir: "/tmp/redis-{{ target_version }}"
+
+    - name: Start Redis service
+      shell: sudo -u redis /usr/local/bin/redis-server /etc/redis/redis.conf

@@ -1,0 +1,44 @@
+---
+- name: Provision Redis Nodes
+  hosts: redis_nodes
+  become: yes
+  roles:
+    - role: redis
+
+- name: Form Redis Cluster
+  hosts: redis-node-1
+  gather_facts: no
+  become: yes
+  tasks:
+    - name: Check if cluster is already formed
+      shell: redis-cli -h 10.99.0.11 -p 6379 cluster info
+      register: cluster_check
+      ignore_errors: yes
+
+    - name: Create cluster
+      shell: >
+        redis-cli --cluster create
+        10.99.0.11:6379 10.99.0.12:6379 10.99.0.13:6379
+        10.99.0.14:6379 10.99.0.15:6379 10.99.0.16:6379
+        --cluster-replicas 1 --cluster-yes
+      register: cluster_create
+      when: cluster_check.rc != 0 or 'cluster_state:ok' not in cluster_check.stdout
+      failed_when: "'ERR' in cluster_create.stderr"
+      changed_when: "'OK' in cluster_create.stdout"
+      ignore_errors: yes # In case it's already created
+
+    - name: Get cluster info
+      shell: redis-cli -h 10.99.0.11 -p 6379 cluster info
+      register: cluster_info
+
+    - name: Get cluster nodes
+      shell: redis-cli -h 10.99.0.11 -p 6379 cluster nodes
+      register: cluster_nodes
+
+    - name: Print cluster info
+      debug:
+        msg: "{{ cluster_info.stdout_lines }}"
+
+    - name: Print cluster nodes
+      debug:
+        msg: "{{ cluster_nodes.stdout_lines }}"
