@@ -134,6 +134,11 @@ def do_provision(args):
     res = subprocess.run(cmd, cwd="ansible")
     status = "success" if res.returncode == 0 else "failed"
     log_operation("provision", status, target_version=args.version)
+    
+    if res.returncode == 0:
+        print("\nCluster provisioned successfully! Current topology:")
+        time.sleep(2)  # Give the cluster a moment to gossip before querying
+        do_status(args)
 
 def do_data_seed(args):
     print(f"Seeding {args.keys} keys...")
@@ -222,9 +227,21 @@ def do_upgrade(args):
     all_at_target = True
     for n in nodes:
         info = get_node_info(n["ip"])
-        if info.get("redis_version", "").strip() != args.target_version:
+        current_version = info.get("redis_version", "").strip()
+        
+        # Parse versions to tuples of integers for safe semantic comparison
+        try:
+            curr_v = tuple(map(int, current_version.split('.')))
+            targ_v = tuple(map(int, args.target_version.split('.')))
+            if targ_v < curr_v:
+                print(f"FATAL: Downgrade attempted from {current_version} to {args.target_version}.")
+                print("Redis does not support downgrading major/minor versions because newer RDB/AOF formats cannot be read by older versions. Aborting to protect cluster integrity.")
+                sys.exit(1)
+        except ValueError:
+            pass # Fallback if versions aren't cleanly semantic
+            
+        if current_version != args.target_version:
             all_at_target = False
-            break
             
     if all_at_target:
         print("Already at target version. No nodes require upgrade.")
