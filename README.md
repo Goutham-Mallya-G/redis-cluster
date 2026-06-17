@@ -9,6 +9,12 @@ A complete Ansible-driven CLI tool for managing a 6-node Redis cluster with zero
 
 ## Quick Start Guide
 
+### Step 0: Setup Environment
+Before proceeding, run the setup script to configure correct file permissions for the CLI tool and SSH keys (especially important after cloning the repository):
+```bash
+./setup.sh
+```
+
 ### Step 1: Bring Up the Infrastructure
 The tool is designed to work seamlessly with either Docker or Podman. The network is configured statically on the `10.99.0.0/24` subnet.
 
