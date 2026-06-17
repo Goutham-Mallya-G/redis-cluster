@@ -1,0 +1,11 @@
+$ ./redis-tool verify --full
+✓ Docker found
+✓ ansible-playbook 2.14.0 found
+Proceeding...
+
+Performing full verification...
+1. Data integrity: PASS
+2. Version consistency: PASS
+3. Topology health: PASS
+4. Cluster state: PASS
+5. Replication lag: PASS

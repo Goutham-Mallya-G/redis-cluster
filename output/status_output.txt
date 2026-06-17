@@ -1,0 +1,18 @@
+$ ./redis-tool status
+✓ Docker found
+✓ ansible-playbook 2.14.0 found
+Proceeding...
+
+Fetching cluster status...
+
+Cluster State: ok
+
+MASTERS
+ 10.10.0.11:6379 [master] v7.0.15 slots: 0-5460 keys: 332 mem: 2.1M
+ 10.10.0.12:6379 [master] v7.0.15 slots: 5461-10922 keys: 341 mem: 2.0M
+ 10.10.0.13:6379 [master] v7.0.15 slots: 10923-16383 keys: 327 mem: 1.9M
+
+REPLICAS
+ 10.10.0.14:6379 [replica] v7.0.15 replicating: 10.10.0.11:6379 mem: 2.1M
+ 10.10.0.15:6379 [replica] v7.0.15 replicating: 10.10.0.12:6379 mem: 2.0M
+ 10.10.0.16:6379 [replica] v7.0.15 replicating: 10.10.0.13:6379 mem: 1.9M

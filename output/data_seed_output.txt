@@ -1,0 +1,7 @@
+$ ./redis-tool data seed --keys 1000
+✓ Docker found
+✓ ansible-playbook 2.14.0 found
+Proceeding...
+
+Seeding 1000 keys...
+Summary: inserted 1000 keys.

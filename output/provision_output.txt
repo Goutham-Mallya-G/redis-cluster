@@ -1,0 +1,28 @@
+$ ./redis-tool provision --version 7.0.15 --masters 3 --replicas-per-master 1
+✓ Docker found
+✓ ansible-playbook 2.14.0 found
+Proceeding...
+
+Provisioning Redis 7.0.15 cluster with 3 masters and 1 replicas per master...
+
+PLAY [Provision Redis Nodes] ***************************************************
+...
+TASK [redis : Start and enable Redis service] **********************************
+changed: [redis-node-1]
+changed: [redis-node-2]
+changed: [redis-node-3]
+changed: [redis-node-4]
+changed: [redis-node-5]
+changed: [redis-node-6]
+
+PLAY [Form Redis Cluster] ******************************************************
+TASK [Create cluster] **********************************************************
+changed: [localhost]
+...
+PLAY RECAP *********************************************************************
+redis-node-1 : ok=11 changed=9 unreachable=0 failed=0 skipped=0
+redis-node-2 : ok=11 changed=9 unreachable=0 failed=0 skipped=0
+redis-node-3 : ok=11 changed=9 unreachable=0 failed=0 skipped=0
+redis-node-4 : ok=11 changed=9 unreachable=0 failed=0 skipped=0
+redis-node-5 : ok=11 changed=9 unreachable=0 failed=0 skipped=0
+redis-node-6 : ok=11 changed=9 unreachable=0 failed=0 skipped=0

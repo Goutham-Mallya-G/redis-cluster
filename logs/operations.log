@@ -1,0 +1,30 @@
+{"timestamp": "2026-06-16T09:09:25.656495Z", "command": "provision", "status": "skipped", "reason": "cluster already formed"}
+{"timestamp": "2026-06-16T09:10:35.202218Z", "command": "provision", "status": "success", "target_version": "7.0.15"}
+{"timestamp": "2026-06-16T09:21:07.785658Z", "command": "status", "status": "success", "state": "fail"}
+{"timestamp": "2026-06-16T09:21:14.146742Z", "command": "verify_full", "status": "success"}
+{"timestamp": "2026-06-16T09:21:14.146945Z", "command": "upgrade", "status": "success", "target_version": "7.0.15"}
+{"timestamp": "2026-06-16T09:26:22.229976Z", "command": "provision", "status": "failed", "target_version": "7.0.15"}
+{"timestamp": "2026-06-16T09:30:27.359612Z", "command": "provision", "status": "failed", "target_version": "7.0.15"}
+{"timestamp": "2026-06-16T09:37:39.028524Z", "command": "provision", "status": "failed", "target_version": "7.0.15"}
+{"timestamp": "2026-06-16T09:40:21.789753Z", "command": "provision", "status": "failed", "target_version": "7.0.15"}
+{"timestamp": "2026-06-16T10:11:47.444236Z", "command": "provision", "status": "success", "target_version": "7.0.15"}
+{"timestamp": "2026-06-16T10:12:03.958218Z", "command": "provision", "status": "skipped", "reason": "cluster already formed"}
+{"timestamp": "2026-06-16T10:13:01.593725Z", "command": "provision", "status": "success", "target_version": "7.0.15"}
+{"timestamp": "2026-06-16T10:13:48.698099Z", "command": "data_seed", "status": "success", "keys": 1000}
+{"timestamp": "2026-06-16T10:13:56.344546Z", "command": "data_verify", "status": "success", "keys": 1000}
+{"timestamp": "2026-06-16T10:40:43.661039Z", "command": "status", "status": "success", "state": "ok"}
+{"timestamp": "2026-06-16T10:40:50.474850Z", "command": "verify_full", "status": "success"}
+{"timestamp": "2026-06-16T10:40:50.475042Z", "command": "upgrade", "status": "success", "target_version": "7.2.6"}
+{"timestamp": "2026-06-16T10:42:33.557987Z", "command": "upgrade", "status": "skipped", "target_version": "7.2.6", "reason": "all nodes at target version"}
+{"timestamp": "2026-06-16T11:04:28.982177Z", "command": "status", "status": "success", "state": "ok"}
+{"timestamp": "2026-06-16T11:04:40.495793Z", "command": "verify_full", "status": "success"}
+{"timestamp": "2026-06-17T06:29:16.507418Z", "command": "provision", "status": "failed", "target_version": "7.0.15"}
+{"timestamp": "2026-06-17T06:31:58.146153Z", "command": "provision", "status": "success", "target_version": "7.0.15"}
+{"timestamp": "2026-06-17T06:33:43.340494Z", "command": "data_seed", "status": "success", "keys": 1000}
+{"timestamp": "2026-06-17T06:34:10.293725Z", "command": "data_verify", "status": "success", "keys": 1000}
+{"timestamp": "2026-06-17T06:34:33.507391Z", "command": "status", "status": "success", "state": "ok"}
+{"timestamp": "2026-06-17T06:35:03.480133Z", "command": "data_verify", "status": "success", "keys": 1000}
+{"timestamp": "2026-06-17T07:02:45.835008Z", "command": "status", "status": "success", "state": "ok"}
+{"timestamp": "2026-06-17T07:02:52.801285Z", "command": "verify_full", "status": "success"}
+{"timestamp": "2026-06-17T07:02:52.801628Z", "command": "upgrade", "status": "success", "target_version": "7.2.6"}
+{"timestamp": "2026-06-17T07:03:21.920238Z", "command": "verify_full", "status": "success"}

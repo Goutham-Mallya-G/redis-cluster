@@ -8,11 +8,12 @@ venv/
 # Ansible
 *.retry
 
-# Local runtime logs and command outputs
-logs/*
-!logs/.gitkeep
-output/*
-!output/.gitkeep
+# Track logs and command outputs for submission
+# (Commented out to allow these files to be pushed)
+# logs/*
+# !logs/.gitkeep
+# output/*
+# !output/.gitkeep
 
 # IDE and OS
 .vscode/
