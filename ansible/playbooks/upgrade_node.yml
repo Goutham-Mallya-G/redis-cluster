@@ -25,4 +25,4 @@
         chdir: "/tmp/redis-{{ target_version }}"
 
     - name: Start Redis service
-      shell: sudo -u redis /usr/local/bin/redis-server /etc/redis/redis.conf
+      shell: su redis -s /bin/sh -c '/usr/local/bin/redis-server /etc/redis/redis.conf'

@@ -73,7 +73,7 @@
 - name: Start Redis service
   shell: |
     if ! pgrep redis-server > /dev/null; then
-      sudo -u redis /usr/local/bin/redis-server {{ redis_conf_dir }}/redis.conf
+      su redis -s /bin/sh -c '/usr/local/bin/redis-server {{ redis_conf_dir }}/redis.conf'
     fi
 
 - name: Wait for Redis to start
