@@ -153,6 +153,15 @@ def do_data_seed(args):
     status = "success" if res.returncode == 0 else "failed"
     log_operation("data_seed", status, keys=args.keys)
     print(f"Summary: inserted {args.keys} keys.")
+    
+    print("\nKey distribution across masters:")
+    nodes = parse_cluster_nodes()
+    masters = [n for n in nodes if "master" in n["flags"]]
+    for m in masters:
+        n_info = get_node_info(m["ip"])
+        keys = n_info.get("db0", "keys=0").split(',')[0].split('=')[-1]
+        print(f" - {m['ip']}:6379 -> {keys} keys")
+
 
 def do_data_verify(args):
     print(f"Verifying {args.keys} keys...")
@@ -228,8 +237,17 @@ def do_upgrade(args):
     print("\n1. Pre-flight checks...")
     print(" - Cluster state: ok")
     
+    print(" - Pre-upgrade data verification:")
+    setattr(args, 'keys', 1000)
+    do_data_verify(args)
+    
     print("\n2. Upgrading replicas first...")
     for idx, r in enumerate(replicas):
+        info = get_node_info(r["ip"])
+        if info.get("redis_version", "").strip() == args.target_version:
+            print(f" - [{idx+1}/{len(replicas)}] Replica {r['ip']} already at v{args.target_version}. Skipped.")
+            continue
+            
         print(f" - [{idx+1}/{len(replicas)}] Upgrading replica {r['ip']}...")
         node_index = int(r['ip'].split('.')[-1]) - 10
         target_node = f"redis-node-{node_index}"
@@ -246,6 +264,11 @@ def do_upgrade(args):
             
     print("\n3. Upgrading masters...")
     for idx, m in enumerate(masters):
+        info = get_node_info(m["ip"])
+        if info.get("redis_version", "").strip() == args.target_version:
+            print(f" - [{idx+1}/{len(masters)}] Master {m['ip']} already at v{args.target_version}. Skipped.")
+            continue
+
         my_rep = next((r for r in replicas if r["master_id"] == m["id"]), None)
         if my_rep:
             print(f" - Failing over master {m['ip']} to replica {my_rep['ip']}...")
