@@ -9,8 +9,10 @@ venv/
 *.retry
 
 # Local runtime logs and command outputs
-logs/
-output/
+logs/*
+!logs/.gitkeep
+output/*
+!output/.gitkeep
 
 # IDE and OS
 .vscode/
